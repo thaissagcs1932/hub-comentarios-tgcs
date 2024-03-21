@@ -1,0 +1,73 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.comments {
+    text-align: left;
+    width: 400px;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    color: brown;
+    font-weight: bolder;
+    /* border: 1px solid rgba(0, 0, 0, 0.2); */
+    border-radius: 10px;
+}
+
+.comments *{
+    display: block;
+}
+
+.comments label {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#form-comentario textarea, input {
+    display: block;
+    color: rgb(17, 35, 41);
+    border-radius: 5px;
+    border: none;
+    background-color: antiquewhite;
+    padding: 5px;
+}
+
+.btn-submit{
+    margin-top: 25px;
+    padding: 10px;
+    width: 100px;
+}
+
+#login-form * {
+ margin-top: 10px;
+ margin-bottom: 10px;
+}
+
+#login-form,
+#form-comentario{
+    height: fit-content;
+}
+
+#form-comentario form{
+    margin: 10px auto 0px auto;
+    padding: 10px auto 0px auto;
+}
+
+.date-style{
+    display: inline;
+    font-size: smaller;
+    height: fit-content;
+}
+
+.disabled{
+    display: none;
+}
+
+.comments{
+    transition: all 0.5s ease;
+}
+
+.comments.disabled{
+    opacity: 0;
+    pointer-events: none;
+}
