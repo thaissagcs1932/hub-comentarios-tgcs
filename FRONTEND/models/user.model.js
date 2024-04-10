@@ -7,7 +7,14 @@
                 this.firstname = firstname;
                 this.lastname = lastname;
 
-            } else if (username !== undefined, password !== undefined) {
+            }  else if (id !== undefined, username !== undefined, firstname !== undefined, lastname !== undefined) {
+                this.id = id;
+                this.username = username;
+                this.password = null;
+                this.firstname = firstname;
+                this.lastname = lastname;
+
+            }else if (username !== undefined, password !== undefined) {
                 this.id = null;
                 this.username = username;
                 this.password = password;
@@ -37,9 +44,7 @@
         setUsername(value) {
             this.username = value;
         }
-        getPassword() {
-            return this.password;
-        }
+
         setPassword(value) {
             this.password = value;
         }
