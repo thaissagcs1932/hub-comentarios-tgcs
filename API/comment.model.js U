@@ -1,4 +1,0 @@
-class comment {
-    constructor(id,author,comment_text,created_at,update_at)
-if (this.id ! ==underfined,this.author,this.comment_text,this.created_at,this.update_at,comment)
-}  

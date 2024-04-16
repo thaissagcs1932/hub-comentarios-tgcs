@@ -1,44 +1,53 @@
-import { formatDate } from "../utils.js";
-import { CommentService } from '../services/comment.services.js'
+import { formatDate, randomColors } from "../utils.js";
+import { CommentService } from '../services/comment.service.js'
 import { Comment } from "../models/comment.model.js";
-import { User } from "../models/user.model.js";
+import { StorageServices } from "../services/localStorage.service.js";
 
-let _user = new User()
 
-const getInputComment = () => {
-    return {
-        author: document.getElementById('inputAuthor'),
-        comment: document.getElementById('inputComment')
-    }
+const getCommentInput = () => {
+    return document.getElementById('inputComment')
 }
-
-const setInputComment = (authorValue, commentValue) => {
-    const { author, comment } = getInputComment();
-    author.value = authorValue
+const getInputCommentValue = () => {
+    return document.getElementById('inputComment').value
+}
+const setInputComment = (commentValue) => {
+    const { comment } = getCommentInput();
     comment.value = commentValue
 }
+const clearCommentField = () => {
+    getCommentInput().value = ''
+}
 
-const getInputCommentValue = () => {
-    return {
-        author: document.getElementById('inputAuthor').value,
-        comment: document.getElementById('inputComment').value
-    }
+
+const setAuthorCommentField = (usr) => {
+    const inputAuthor = document.getElementById('inputAuthor');
+    inputAuthor.value = usr.firstname + ' ' + usr.lastname;
+    inputAuthor.style.backgroundColor = '#444'
+    inputAuthor.style.color = '#FFF'
 }
 
 const submitComment = (event) => {
     event.preventDefault();
-    const comment = getInputCommentValue()
 
-    //requisção Post para enviar o comment
+    const comment = {
+        userId: StorageServices.user.get().getId(),
+        comment_text: getInputCommentValue()
+    };
 
-    loadComment()
+    CommentService.apiPostComment(comment).then(result => {
+        alert(result)
+        clearCommentField();
+        loadComment();
+    }).catch((error) => {
+        console.log(error)
+    });
 }
 
 const loadComment = () => {
     // Dados carregados da API
     CommentService.apiGetComment().then(result => {
         const comments = result.map(
-            (comment) => new Comment(comment.id, comment.author, comment.comment_text, comment.created_at, comment.updated_at)
+            (comment) => new Comment(comment.id, comment.userId, comment.author, comment.comment_text, comment.created_at, comment.updated_at)
         );
         displayComment(comments)
     }).catch(error => {
@@ -47,10 +56,9 @@ const loadComment = () => {
     })
 }
 
-
 const displayComment = (comments) => {
     const divFeed = document.getElementById('comment-feed');
-    divFeed.innerHTML = ``
+    divFeed.innerHTML = `<h5 class="border-bottom pb-2 mb-0">Feed</h5>`
     comments.forEach(item => {
         const divDisplay = document.createElement('div');
         divDisplay.className = 'd-flex text-body-secondary pt-3 border-bottom'
@@ -59,8 +67,8 @@ const displayComment = (comments) => {
                 xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
                 preserveAspectRatio="xMidYMid slice" focusable="false">
                 <title>comentário</title>
-                <rect width="100%" height="100%" fill="#444"></rect>
-                <text x="35%" y="50%" fill="#000000"dy=".3em">${item.getAuthor().charAt(0)}</text>
+                <rect width="100%" height="100%" fill="#${randomColors().dark}"></rect>
+                <text x="35%" y="50%" fill="#${randomColors().light}"dy=".3em">${item.getAuthor().charAt(0)}</text>
             </svg>
             <p class="pb-3 mb-0 small lh-sm text-gray-dark">
                 <strong class="d-block text-gray-dark">@${item.getAuthor()}
@@ -83,9 +91,6 @@ const CommentComponent = {
             loadComment();
         }
     },
-    params: (usr) => {
-        _user = usr;
-    }
 }
 
-export { CommentComponent }
+export { CommentComponent, setInputComment, setAuthorCommentField, loadComment }
